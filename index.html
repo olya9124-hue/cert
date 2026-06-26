@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Team Lior · CRM Certification Test</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;background:#f5f5f3;color:#1a1a1a;min-height:100vh;padding:2rem 1rem;}
+.wrap{max-width:660px;margin:0 auto;}
+.card{background:#fff;border-radius:16px;border:1px solid #e5e5e2;padding:2rem;}
+
+/* logo */
+.logo-row{display:flex;align-items:center;gap:8px;margin-bottom:1.75rem;}
+.logo-dot{width:9px;height:9px;border-radius:50%;background:#378add;flex-shrink:0;}
+.logo-text{font-size:12px;font-weight:500;color:#888;letter-spacing:.06em;text-transform:uppercase;}
+.logo-right{margin-left:auto;font-size:12px;color:#aaa;}
+
+/* screens */
+.screen{display:none;}.screen.active{display:block;}
+
+/* typography */
+h1{font-size:22px;font-weight:500;margin-bottom:.4rem;}
+.sub{font-size:15px;color:#666;line-height:1.6;margin-bottom:1.75rem;}
+.field-lbl{display:block;font-size:13px;color:#666;margin-bottom:6px;}
+
+/* inputs */
+input[type=text],textarea{width:100%;padding:10px 13px;font-size:15px;font-family:inherit;color:#1a1a1a;background:#fff;border:1px solid #d5d5d2;border-radius:8px;outline:none;transition:border-color .15s;}
+input[type=text]{height:40px;margin-bottom:1.5rem;}
+input[type=text]:focus,textarea:focus{border-color:#378add;}
+textarea{min-height:100px;resize:vertical;margin-bottom:1rem;}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 22px;font-size:14px;font-family:inherit;border-radius:8px;cursor:pointer;border:1px solid #d5d5d2;background:#fff;color:#1a1a1a;transition:background .12s,opacity .12s,transform .1s;}
+.btn:hover{background:#f5f5f3;}.btn:active{transform:scale(.98);}
+.btn.pri{background:#1a1a1a;color:#fff;border-color:#1a1a1a;}.btn.pri:hover{opacity:.85;}
+.btn:disabled{opacity:.35;cursor:default;pointer-events:none;}
+
+/* progress */
+.progress-bar{height:3px;background:#eee;border-radius:2px;margin-bottom:1.75rem;overflow:hidden;}
+.progress-fill{height:100%;background:#378add;border-radius:2px;transition:width .3s;}
+
+/* section badge */
+.sec-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px;margin-bottom:.75rem;text-transform:uppercase;letter-spacing:.05em;}
+.sec-bi{background:#e6f1fb;color:#185fa5;}
+.sec-trn{background:#e8f4fd;color:#1a5276;}
+.sec-cb{background:#d5f5e3;color:#1e8449;}
+.sec-ms{background:#f4ecf7;color:#6c3483;}
+.sec-kpi{background:#fdebd0;color:#784212;}
+
+/* question type tag */
+.type-tag{font-size:11px;font-weight:500;padding:2px 8px;border-radius:4px;margin-bottom:1rem;display:inline-block;}
+.type-tf{background:#fef9e7;color:#7d6608;}
+.type-mc{background:#d5f5e3;color:#1e8449;}
+.type-open{background:#ebf5fb;color:#1a5276;}
+.type-calc{background:#fdedec;color:#922b21;}
+
+.q-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem;}
+.q-num{font-size:12px;color:#aaa;text-transform:uppercase;letter-spacing:.05em;}
+.q-text{font-size:17px;font-weight:500;color:#1a1a1a;margin-bottom:1.25rem;line-height:1.55;white-space:pre-line;}
+
+/* options */
+.opts{display:flex;flex-direction:column;gap:9px;margin-bottom:1.25rem;}
+.opt{display:flex;align-items:flex-start;gap:12px;padding:11px 14px;border:1px solid #d5d5d2;border-radius:8px;cursor:pointer;transition:border-color .12s,background .12s;}
+.opt:hover{background:#f9f9f7;}.opt.sel{border-color:#378add;background:#e6f1fb;}
+.opt input[type=radio]{margin-top:3px;accent-color:#378add;flex-shrink:0;}
+.opt-lbl{font-size:14px;color:#1a1a1a;line-height:1.4;}.opt.sel .opt-lbl{color:#185fa5;}
+
+/* nav */
+.nav-row{display:flex;gap:10px;align-items:center;margin-top:1.25rem;}
+
+/* section divider */
+.sec-divider{text-align:center;padding:1.5rem 0;border-top:1px solid #e5e5e2;margin-top:1.5rem;}
+.sec-divider p{font-size:14px;color:#666;margin-bottom:1rem;}
+.sec-divider h2{font-size:18px;font-weight:500;margin-bottom:.25rem;}
+.sec-divider .sub-small{font-size:13px;color:#888;}
+
+/* done screen */
+.done-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem;}
+.stat-box{background:#f5f5f3;border-radius:8px;padding:12px;text-align:center;}
+.stat-num{font-size:22px;font-weight:500;color:#1a1a1a;}
+.stat-lbl{font-size:12px;color:#888;margin-top:2px;}
+.sum-card{border:1px solid #e5e5e2;border-radius:10px;padding:13px 15px;margin-bottom:10px;}
+.sum-top{display:flex;gap:8px;align-items:center;margin-bottom:6px;}
+.sum-qnum{font-size:11px;color:#aaa;text-transform:uppercase;letter-spacing:.05em;}
+.sum-q{font-size:13px;font-weight:500;color:#1a1a1a;margin-bottom:6px;line-height:1.4;white-space:pre-line;}
+.sum-a{font-size:13px;color:#555;background:#f5f5f3;border-radius:6px;padding:8px 10px;line-height:1.5;white-space:pre-line;}
+.sum-empty{font-style:italic;color:#aaa;}
+.action-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:1.25rem;align-items:center;}
+.copied{font-size:13px;color:#3b6d11;opacity:0;transition:opacity .3s;}.copied.show{opacity:1;}
+
+/* info banners */
+.banner{border-radius:8px;padding:10px 14px;font-size:13px;margin-bottom:1.25rem;line-height:1.5;}
+.banner-blue{background:#e6f1fb;border:1px solid #b5d4f4;color:#185fa5;}
+.banner-green{background:#eaf3de;border:1px solid #c0dd97;color:#3b6d11;}
+.banner-red{background:#fcebeb;border:1px solid #f7c1c1;color:#a32d2d;}
+
+/* spinner */
+.spinner{display:inline-block;width:13px;height:13px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite;vertical-align:-2px;margin-right:4px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* setup steps */
+.step{background:#f9f9f7;border:1px solid #e5e5e2;border-radius:10px;padding:13px 16px;margin-bottom:10px;}
+.step-num{font-size:11px;color:#aaa;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+.step p{font-size:13px;color:#444;line-height:1.6;}
+.step code{background:#eee;padding:1px 5px;border-radius:4px;font-size:12px;font-family:monospace;}
+.url-row{display:flex;gap:8px;margin-top:.75rem;}
+.url-row input{flex:1;}
+
+/* section nav list */
+.sec-list{list-style:none;margin-bottom:1.5rem;}
+.sec-list li{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f0f0ee;font-size:14px;color:#444;}
+.sec-list li:last-child{border-bottom:none;}
+.sec-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="card">
+
+<!-- SETUP -->
+<div id="screenSetup" class="screen">
+  <div class="logo-row"><div class="logo-dot"></div><span class="logo-text">Team Lior · Setup</span></div>
+  <h1>Connect to Google Sheets</h1>
+  <p class="sub">One-time setup. After this, all agent answers will go directly to your spreadsheet.</p>
+  <div class="step"><div class="step-num">Step 1</div><p>Create a new Google Sheet and open <strong>Extensions → Apps Script</strong>.</p></div>
+  <div class="step"><div class="step-num">Step 2</div><p>Delete all existing code and paste the contents of <code>google_apps_script.js</code> (in the same folder as this file).</p></div>
+  <div class="step"><div class="step-num">Step 3</div><p>Click <strong>Deploy → New deployment</strong>. Type: <strong>Web app</strong>. Access: <strong>Anyone</strong>. Click Deploy and copy the URL.</p></div>
+  <div class="step"><div class="step-num">Step 4</div><p>Paste the URL below and click Save.</p>
+    <div class="url-row">
+      <input type="text" id="scriptUrl" placeholder="https://script.google.com/macros/s/..." oninput="checkUrl()">
+      <button class="btn pri" id="saveUrlBtn" disabled onclick="saveUrl()">Save</button>
+    </div>
+  </div>
+  <div id="urlErr" style="display:none;margin-top:.75rem;"></div>
+</div>
+
+<!-- WELCOME -->
+<div id="screenWelcome" class="screen">
+  <div class="logo-row"><div class="logo-dot"></div><span class="logo-text">Team Lior · CRM Certification</span></div>
+  <h1>Welcome!</h1>
+  <p class="sub">This test covers five areas of CRM certification. Enter your name to begin.<br>Estimated time: <strong>~3.5 hours</strong>. You can navigate back to any question within a section.</p>
+  <ul class="sec-list">
+    <li><span class="sec-dot" style="background:#378add;"></span>Section 1 · BI Report Analysis <span style="margin-left:auto;font-size:12px;color:#aaa;">17 questions</span></li>
+    <li><span class="sec-dot" style="background:#1f618d;"></span>Section 2 · Tournaments Certification <span style="margin-left:auto;font-size:12px;color:#aaa;">16 questions</span></li>
+    <li><span class="sec-dot" style="background:#117a65;"></span>Section 3 · Cashback Certification <span style="margin-left:auto;font-size:12px;color:#aaa;">17 questions</span></li>
+    <li><span class="sec-dot" style="background:#6c3483;"></span>Section 4 · Missions Certification <span style="margin-left:auto;font-size:12px;color:#aaa;">17 questions</span></li>
+    <li><span class="sec-dot" style="background:#784212;"></span>Section 5 · KPI Definitions &amp; Relationships <span style="margin-left:auto;font-size:12px;color:#aaa;">17 questions</span></li>
+  </ul>
+  <label class="field-lbl" for="nameInput">Full name</label>
+  <input type="text" id="nameInput" placeholder="e.g. Marko Petrović" oninput="checkName()">
+  <button class="btn pri" id="startBtn" disabled onclick="startQuiz()">▶&nbsp; Start test</button>
+</div>
+
+<!-- SECTION INTRO -->
+<div id="screenSecIntro" class="screen">
+  <div class="logo-row"><div class="logo-dot"></div><span class="logo-text">Team Lior · CRM Certification</span><span class="logo-right" id="introAgent"></span></div>
+  <div class="sec-divider" style="border-top:none;padding-top:0;">
+    <div id="introBadge" class="sec-badge" style="margin-bottom:1rem;"></div>
+    <h2 id="introTitle"></h2>
+    <p class="sub-small" id="introSub" style="margin-top:.4rem;margin-bottom:1.5rem;"></p>
+    <button class="btn pri" onclick="startSection()">Begin section &#8594;</button>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="screenQuiz" class="screen">
+  <div class="logo-row">
+    <div class="logo-dot"></div>
+    <span class="logo-text">Team Lior · CRM Certification</span>
+    <span class="logo-right" id="quizAgent"></span>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progFill"></div></div>
+  <div id="secBadge" class="sec-badge"></div>
+  <div id="typeTag" class="type-tag"></div>
+  <div class="q-meta"><span class="q-num" id="qNum"></span></div>
+  <div class="q-text" id="qText"></div>
+  <div id="qBody"></div>
+  <div class="nav-row">
+    <button class="btn" id="btnBack" disabled onclick="go(-1)">&#8592; Back</button>
+    <button class="btn pri" id="btnNext" onclick="go(1)">Next &#8594;</button>
+  </div>
+</div>
+
+<!-- DONE -->
+<div id="screenDone" class="screen">
+  <div class="logo-row"><div class="logo-dot"></div><span class="logo-text">Team Lior · CRM Certification</span></div>
+  <h1 style="margin-bottom:.5rem;">Test complete!</h1>
+  <p class="sub">Thank you, <span id="doneAgent"></span>. Your answers have been submitted.</p>
+  <div id="sendStatus"></div>
+  <div class="done-stats">
+    <div class="stat-box"><div class="stat-num">84</div><div class="stat-lbl">Total questions</div></div>
+    <div class="stat-box"><div class="stat-num">5</div><div class="stat-lbl">Sections</div></div>
+    <div class="stat-box"><div class="stat-num" id="answeredCount">—</div><div class="stat-lbl">Answered</div></div>
+  </div>
+  <div id="summaryList"></div>
+  <div class="action-row">
+    <button class="btn pri" onclick="downloadMine()">&#8595; Download my answers</button>
+    <button class="btn" onclick="copyMine()">&#10063; Copy</button>
+    <span class="copied" id="copiedMsg">Copied!</span>
+  </div>
+</div>
+
+</div><!-- .card -->
+</div><!-- .wrap -->
+
+<script>
+const URL_KEY = 'tl_cert_script_url';
+const HARDCODED_URL = 'https://script.google.com/macros/s/AKfycbwP2ZcUwn3lAyAVa0V9whpj1asPgoTFivALskl9CPi_LuUBIasd1XxKmeQfPHVQ8gN3xA/exec';
+
+const SECTIONS = [
+  { id:'bi',  label:'BI Report Analysis',             badgeClass:'sec-bi',  color:'#378add' },
+  { id:'trn', label:'Tournaments Certification',       badgeClass:'sec-trn', color:'#1f618d' },
+  { id:'cb',  label:'Cashback Certification',          badgeClass:'sec-cb',  color:'#117a65' },
+  { id:'ms',  label:'Missions Certification',          badgeClass:'sec-ms',  color:'#6c3483' },
+  { id:'kpi', label:'KPI Definitions & Relationships', badgeClass:'sec-kpi', color:'#784212' },
+];
+
+// Q type helpers
+const TF='True / False', MC='Multiple Choice', OP='Open', CA='Calculation';
+function typeClass(t){ return t===TF?'type-tf':t===MC?'type-mc':t===CA?'type-calc':'type-open'; }
+
+const QUESTIONS = [
+// ── SECTION 1: BI REPORT ANALYSIS ──────────────────────────────────────────
+{sec:'bi',type:OP,q:`Match each scenario to the correct report:
+1. Deposits declined for 4 months
+2. Deposits dropped yesterday
+3. New players are not returning after first deposit
+4. ADPU is declining — which segment is responsible?
+5. Free Spins campaign ended — evaluate performance`},
+{sec:'bi',type:OP,q:`A CRM agent opens the Overview Report to investigate a 4-month deposit trend and concludes performance has been declining. What mistake did they make and what should they have done instead?`},
+{sec:'bi',type:OP,q:`A Free Spins campaign finished yesterday. Which three reports should CRM analyse, and what specific question does each one answer?`},
+{sec:'bi',type:OP,q:`A CRM agent is reviewing the Cohort Report on Day 10 of the current month. Month 0 shows unusually high retention. Should they act on this? What is the risk if they do?`},
+{sec:'bi',type:TF,q:`Bonus Report has a Coupon ID filter applied. The Brand View total can be used to represent overall brand bonus performance.`},
+{sec:'bi',type:OP,q:`General Dashboard shows one weak month after six strong months. A CRM agent concludes performance is declining and proposes a major campaign overhaul. Evaluate this decision.`},
+{sec:'bi',type:OP,q:`Overview Report shows: Deposits ↓, UDPs ↓, ADPU stable, NDCs ≈ SPLM, CVR ≈ SPLM.\nWhat is the most likely cause and what should CRM investigate next?`},
+{sec:'bi',type:OP,q:`Overview Report shows: Deposits ↓, UDPs stable, ADPU ↓.\nWhat is happening and what is the correct next step?`},
+{sec:'bi',type:OP,q:`Overview Report shows: GGR stable, Deposits ↓, NGR ↓.\nA CRM agent concludes the business is underperforming. Is this correct? What is the most likely explanation?`},
+{sec:'bi',type:OP,q:`Cohort Report shows: M1 Retention = 12%, down from 28% three months ago.\nWhat does this indicate and what should CRM investigate?`},
+{sec:'bi',type:OP,q:`Bonus-to-Deposit in Brand View is 190%. Describe the full investigation sequence step by step.`},
+{sec:'bi',type:OP,q:`At what point should a CRM agent stop investigating independently and escalate? Who do they contact and how?`},
+{sec:'bi',type:OP,q:`A CRM agent sees Bonus Claims increased 40% this month and concludes the campaign was successful. What is wrong with this conclusion and what should they have checked?`},
+{sec:'bi',type:OP,q:`A CRM agent identifies a player with Bonus-to-Deposit = 12,000% and immediately labels them a bonus abuser. What is wrong with this approach?`},
+{sec:'bi',type:OP,q:`Deposits ↓ 15%, UDPs ↓ 18%, NDCs ↑ 10%, CVR ↓, ADPU stable, M1 Retention ↓.\nProvide a full diagnosis and list your next steps.`},
+{sec:'bi',type:OP,q:`Active Players ↑, Turnover ↑, Deposits ↔, GGR ↓, Margin dropped from 10% to 4%.\nWhat happened? Is this a CRM problem? What should CRM do?`},
+{sec:'bi',type:OP,q:`You are a CRM agent. Deposits declined 20% vs SPLM. Describe your full investigation from the first report you open to the moment you present findings to your TL.`},
+
+// ── SECTION 2: TOURNAMENTS ─────────────────────────────────────────────────
+{sec:'trn',type:OP,q:`What are the three tournament types? Describe what each one measures and give an example of when you would choose each.`},
+{sec:'trn',type:OP,q:`A TL wants to restrict a tournament to VIP players only. The setup does not support segment restrictions. What is the correct approach and what should CRM avoid?`},
+{sec:'trn',type:OP,q:`Describe the full sequence of steps to configure and launch a tournament.`},
+{sec:'trn',type:TF,q:`If a game is listed in the T&C field but not added to Participating Games in the setup, it will count towards the tournament.`},
+{sec:'trn',type:TF,q:`A tournament has reached Credited status. CRM needs to correct an error in the prize distribution. They can edit and redeploy the tournament.`},
+{sec:'trn',type:OP,q:`Two players finish a Wager Tournament with exactly €5,000 wagered each. Player A's last qualifying bet was placed at 14:30. Player B's last qualifying bet was placed at 17:45. Who ranks higher and why?`},
+{sec:'trn',type:OP,q:`A tournament winner has an active wager requirement on their account when the tournament ends. What happens to their reward and what should CRM be aware of?`},
+{sec:'trn',type:MC,q:`A player finishes 25th in a tournament with 20 winner positions. What happens?\nA. The player receives no reward and sees no position\n\nB. The player receives a consolation prize\n\nC. The player's personal position is displayed separately\n\nD. The player is added to position 20`},
+{sec:'trn',type:OP,q:`Explain the difference between Balanced and Aggressive prize distribution. Give an example of when you would choose each.`},
+{sec:'trn',type:OP,q:`Prize Pool = €1,000. You must configure prize distribution across 20 positions to maximise participation. Design the structure and explain your reasoning.`},
+{sec:'trn',type:TF,q:`The system automatically validates that the sum of prize positions equals the Prize Pool before allowing launch.`},
+{sec:'trn',type:OP,q:`Before launching three simultaneous tournaments, what must CRM check? Describe what happens if this check is skipped.`},
+{sec:'trn',type:OP,q:`A tournament has been live for 3 days. You notice the prize distribution totals €900 but the Prize Pool is €1,000. The system did not flag this. What do you do?`},
+{sec:'trn',type:OP,q:`The business wants to reactivate AWOL players AND increase bet size among active players at the same time. A colleague suggests one tournament covering both goals. Evaluate this proposal.`},
+{sec:'trn',type:OP,q:`You have €2,000 to allocate across two tournaments running simultaneously: one for AWOL players, one for VIP players. How would you split the budget and structure each tournament? Justify your choices.`},
+{sec:'trn',type:OP,q:`A Spins Tournament ended yesterday. Participation was high but NGR was negative. What are the most likely causes and what would you change before relaunching?`},
+
+// ── SECTION 3: CASHBACK ────────────────────────────────────────────────────
+{sec:'cb',type:MC,q:`Which of the following statements about Cashback is correct?
+A. Cashback has wagering requirements
+B. Players can opt out after joining
+C. Cashback has no wagering requirements
+D. Only VIP players can receive Cashback`},
+{sec:'cb',type:OP,q:`A player is already enrolled in two Cashback campaigns. A third campaign is launched that they qualify for. Can they join? What should CRM be aware of?`},
+{sec:'cb',type:OP,q:`A CRM agent wants to run a Cashback campaign targeting only VIP players. Can they configure the campaign for a specific segment? If not, what is the correct approach?`},
+{sec:'cb',type:MC,q:`Where is Campaign ID created?
+A. Backoffice
+B. Solitics
+C. Power BI Cashback Scheduler
+D. CRM platform`},
+{sec:'cb',type:MC,q:`What happens if Promotion Type is set to None?
+A. Cashback stops calculating
+B. Campaign ID is deleted
+C. The promotion disappears from the website
+D. Opt-In stops working`},
+{sec:'cb',type:OP,q:`Write the Cashback formula and explain each component. What happens if the result is negative?`},
+{sec:'cb',type:CA,q:`Bets = €1,000 | Wins = €700 | Bonuses = €100 | Completed Withdrawals = €50 | Cashback = 10%\nCalculate Cashback. Show your working.`},
+{sec:'cb',type:CA,q:`Bets = €5,000 | Wins = €3,500 | Bonuses = €200 | Completed Withdrawals = €300 | Cashback = 15%\nCalculate Cashback. Show your working.`},
+{sec:'cb',type:OP,q:`A player had Bets = €800 | Wins = €900 | Bonuses = €0 | Withdrawals = €0 | Cashback = 10%.\nHow much Cashback do they receive? Explain why.`},
+{sec:'cb',type:OP,q:`A player had Bets = €2,000 | Wins = €1,600 | Bonuses = €0 | Cashback = 10%.\nA withdrawal of €200 was initiated but not yet completed at the time of calculation. How much Cashback do they receive?`},
+{sec:'cb',type:OP,q:`Explain the Cashback rounding rule. What happens with amounts of €0.90, €21.20, €122.10, and €1,347?`},
+{sec:'cb',type:MC,q:`Calculated Cashback = €122.10. How much is credited?
+A. €122
+B. €123
+C. €125
+D. €130`},
+{sec:'cb',type:OP,q:`A player reports their Cashback was not credited on the expected date. Describe your investigation steps in the correct order.`},
+{sec:'cb',type:OP,q:`A CRM agent wants to end a Cashback campaign 3 days early because performance is poor. What is the correct process?`},
+{sec:'cb',type:OP,q:`A junior CRM agent proposes running a Cashback campaign targeting No Deposit players to encourage their first deposit. Evaluate this proposal.`},
+{sec:'cb',type:OP,q:`When would you choose Cashback over a Deposit Bonus? Describe three scenarios and explain the reasoning for each.`},
+{sec:'cb',type:OP,q:`A Cashback campaign ran for one month.\nResults: 500 players opted in | Average Cashback paid = €45 | Total cost = €22,500 | Deposit uplift = +€8,000 | NGR change = -€14,500.\nAnalyse the results. Was the campaign successful? What would you change?`},
+
+// ── SECTION 4: MISSIONS ────────────────────────────────────────────────────
+{sec:'ms',type:OP,q:`A mission is currently active. A CRM agent needs to change the reward value. What is the correct process?`},
+{sec:'ms',type:OP,q:`A player Opts-In to a mission on Day 1. On Day 3, they are removed from the target segment. What happens to their mission participation?`},
+{sec:'ms',type:OP,q:`Does the popup in a mission control reward delivery? What is its actual function?`},
+{sec:'ms',type:OP,q:`A mission has Include = Active Players and Exclude = High Risk Players.\nPlayer A is in Active Players only.\nPlayer B is in both Active Players and High Risk Players.\nPlayer C is in High Risk Players only.\nWho receives the mission?`},
+{sec:'ms',type:OP,q:`Explain what happens in each of these Claims / Max Achievements combinations:\nA. Claims = 1, Max Achievements = Unlimited\nB. Claims = 3, Max Achievements = 3\nC. Claims = 0, Max Achievements = 1`},
+{sec:'ms',type:OP,q:`List the key fields that must be configured when setting up a mission in Solitics.`},
+{sec:'ms',type:OP,q:`After launching a mission, which metric do you review first and why? What does it tell you?`},
+{sec:'ms',type:OP,q:`Mission results: Segment Size = 20,000 | Participants = 150 | Completion Rate = 78%.\nDiagnose the issue and recommend actions.`},
+{sec:'ms',type:OP,q:`Mission results: Participants = 6,000 | Completion Rate = 5% | Claim Rate = 90%.\nWhat is the most likely issue and what would you change?`},
+{sec:'ms',type:OP,q:`Mission results: Participants = 5,000 | Completion Rate = 65% | Claim Rate = 12%.\nWhat is the most likely issue and how would you investigate?`},
+{sec:'ms',type:OP,q:`A mission is active in Solitics but not visible on the website. What should CRM check?`},
+{sec:'ms',type:OP,q:`A mission is visible on the website and players are completing it, but rewards are not being credited. What should CRM check?`},
+{sec:'ms',type:OP,q:`Design a mission for AWOL players. Define segment, mechanics, reward, and communication plan. Justify every choice.`},
+{sec:'ms',type:OP,q:`Design a mission for active regular players (not VIP, not AWOL). Define segment, mechanics, reward, and communication plan.`},
+{sec:'ms',type:OP,q:`Mission results: Participants = 4,000 | Completion Rate = 70% | Bonus Cost = €40,000 | NGR uplift = +€5,000.\nAnalyse results and recommend changes before relaunch.`},
+{sec:'ms',type:MC,q:`Mission Results: Participation Rate = 40% | Completion Rate = 80% | Bonus Cost = €8,000 | NGR = -€3,000.\nWhat is the most likely primary cause of the negative NGR?
+A. Mission is too difficult
+B. Rewards are too expensive relative to value generated
+C. Low awareness and poor promotion
+D. Incorrect brand configuration`},
+{sec:'ms',type:OP,q:`You launch a mission for active players. After 3 days:\n• Participants = 200 out of segment of 8,000\n• Completion Rate = 72% | Claim Rate = 68%\n• No technical issues found\nWhat is happening and what do you do?`},
+
+// ── SECTION 5: KPI ─────────────────────────────────────────────────────────
+{sec:'kpi',type:OP,q:`Define GGR and NGR. Explain the difference and why NGR — not GGR — should be used to evaluate a CRM campaign.`},
+{sec:'kpi',type:OP,q:`Explain the difference between ADPU and ADPT. Give an example where they move in opposite directions and explain what that means for CRM.`},
+{sec:'kpi',type:OP,q:`What is Bonus-to-Deposit and why is it a critical metric for CRM? At what level does it become a concern?`},
+{sec:'kpi',type:CA,q:`GGR = €200,000 | Turnover = €2,000,000\nCalculate Margin. Then explain what it means if Margin drops from 10% to 4% the following month.`},
+{sec:'kpi',type:CA,q:`Deposits = €180,000 | UDPs = 900 | Deposit Count = 3,600\nCalculate ADPU and ADPT. What do these numbers tell you about player behaviour?`},
+{sec:'kpi',type:OP,q:`What is Retention Rate? Write the formula. What does a drop in M1 Retention from 32% to 14% over two months indicate?`},
+{sec:'kpi',type:OP,q:`Deposits increased by 20% but NGR decreased by 15%. What are the most likely causes and what should CRM investigate first?`},
+{sec:'kpi',type:OP,q:`GGR increased but NGR stayed flat. A CRM agent concludes the business performed well. Is this correct? Explain.`},
+{sec:'kpi',type:OP,q:`Active Players ↑, Turnover ↑, Deposits ↔. What does this suggest and what should CRM monitor?`},
+{sec:'kpi',type:OP,q:`Deposits ↑, Turnover ↓, Active Players ↔.\nWhat does this suggest and what should CRM do?`},
+{sec:'kpi',type:CA,q:`Bets = €1,000,000 | Wins = €860,000 | Bonuses Used = €60,000\nCalculate GGR, NGR, and Margin.`},
+{sec:'kpi',type:OP,q:`NDCs ↑, CVR stable, UDPs ↓, One Timers ↑, M1 Retention ↓.\nProvide a full diagnosis and list CRM actions.`},
+{sec:'kpi',type:OP,q:`Deposits ↑ 15%, UDPs ↑ 20%, ADPU ↓, NGR ↓, Bonus Amount ↑ 40%.\nProvide a full diagnosis and recommended CRM actions.`},
+{sec:'kpi',type:OP,q:`A player profile shows: LT Deposits = €60 | LT Bonuses = €5,200 | LT NGR = -€4,800.\nWhat does this tell you and what action should CRM take?`},
+{sec:'kpi',type:OP,q:`Retention ↑, One Timers ↓, Deposits ↑, NGR ↑, Bonus Amount stable.\nProvide a full interpretation and recommend the next CRM action.`},
+{sec:'kpi',type:OP,q:`Deposits ↑, UDPs ↑, ADPU ↓, Turnover ↑, GGR ↑, NGR ↑, Bonus Amount ↓.\nDescribe a coherent business scenario that explains all these movements simultaneously.`},
+{sec:'kpi',type:OP,q:`It is end of month. Deposits ↓ 12%, NGR ↓ 18%, Bonus Amount ↑ 25%, M1 Retention ↓, One Timers ↑.\nWrite a structured summary for your TL: what happened, why, and what you recommend.`},
+];
+
+// ── State ──────────────────────────────────────────────────────────────────
+let agentName = '';
+let answers = {};      // key: global index
+let curSec = 0;        // 0-4
+let curQ = 0;          // index within current section questions
+let secStarted = false;
+
+function secQuestions(secId){ return QUESTIONS.map((q,i)=>({...q,gi:i})).filter(q=>q.sec===SECTIONS[secId].id); }
+function globalIdx(secId, localIdx){ return secQuestions(secId)[localIdx].gi; }
+
+// ── Utils ──────────────────────────────────────────────────────────────────
+function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+
+// ── Setup ──────────────────────────────────────────────────────────────────
+function checkUrl(){ document.getElementById('saveUrlBtn').disabled=!document.getElementById('scriptUrl').value.trim().startsWith('https://script.google.com'); }
+function saveUrl(){ localStorage.setItem(URL_KEY,document.getElementById('scriptUrl').value.trim()); show('screenWelcome'); }
+
+// ── Welcome ────────────────────────────────────────────────────────────────
+function checkName(){ document.getElementById('startBtn').disabled=document.getElementById('nameInput').value.trim().length<2; }
+function startQuiz(){
+  agentName=document.getElementById('nameInput').value.trim();
+  curSec=0; curQ=0;
+  showSecIntro();
+}
+
+// ── Section intro ──────────────────────────────────────────────────────────
+function showSecIntro(){
+  const s=SECTIONS[curSec];
+  document.getElementById('introAgent').textContent=agentName;
+  const badge=document.getElementById('introBadge');
+  badge.className='sec-badge '+s.badgeClass;
+  badge.textContent='Section '+(curSec+1)+' of 5';
+  document.getElementById('introTitle').textContent=s.label;
+  const qs=secQuestions(curSec);
+  document.getElementById('introSub').textContent=qs.length+' questions · take your time and write full answers';
+  show('screenSecIntro');
+}
+function startSection(){ curQ=0; renderQ(); show('screenQuiz'); }
+
+// ── Quiz ───────────────────────────────────────────────────────────────────
+function renderQ(){
+  const s=SECTIONS[curSec];
+  const qs=secQuestions(curSec);
+  const q=qs[curQ];
+  const gi=q.gi;
+  const total=qs.length;
+
+  // progress: overall
+  const done=curSec*17+curQ; // approximate
+  document.getElementById('progFill').style.width=((done/84)*100)+'%';
+
+  document.getElementById('quizAgent').textContent=agentName;
+
+  const badge=document.getElementById('secBadge');
+  badge.className='sec-badge '+s.badgeClass;
+  badge.textContent=s.label;
+
+  const tag=document.getElementById('typeTag');
+  tag.className='type-tag '+typeClass(q.type);
+  tag.textContent=q.type;
+
+  document.getElementById('qNum').textContent='Q'+(curQ+1)+' of '+total;
+  const qDisplay = (q.type===MC) 
+    ? q.q.split(/\n|\\n/).filter(l=>!/^[A-D]\./.test(l.trim())).join('\n').trim()
+    : q.q;
+  document.getElementById('qText').textContent=qDisplay;
+
+  document.getElementById('btnBack').disabled=(curQ===0 && curSec===0);
+
+  const isLastQ=curQ===total-1;
+  const isLastSec=curSec===SECTIONS.length-1;
+  const btn=document.getElementById('btnNext');
+  if(isLastQ && isLastSec) btn.innerHTML='&#10003;&nbsp;Finish';
+  else if(isLastQ) btn.innerHTML='Next section &#8594;';
+  else btn.innerHTML='Next &#8594;';
+
+  const body=document.getElementById('qBody');
+  if(q.type===TF||q.type===MC){
+    const opts=parseOpts(q.q,q.type);
+    body.innerHTML='<div class="opts">'+opts.map((o,i)=>{
+      const sel=answers[gi]===i;
+      return `<label class="opt${sel?' sel':''}"><input type="radio" name="gq${gi}" value="${i}" ${sel?'checked':''} onchange="pickOpt(${gi},${i},this)"><span class="opt-lbl">${o}</span></label>`;
+    }).join('')+'</div>';
+  } else {
+    body.innerHTML=`<textarea id="ta${gi}" placeholder="Write your answer here..." oninput="saveTxt(${gi})">${answers[gi]||''}</textarea>`;
+  }
+}
+
+function parseOpts(text, type){
+  if(type===TF) return ['True','False'];
+  // Split on real newlines OR escaped \n
+  const parts = text.split(/\n|\\n/);
+  const fromParts = parts.map(l=>l.trim()).filter(l=>/^[A-D]\./.test(l));
+  if(fromParts.length >= 2) return fromParts;
+  // Last resort: inline split
+  const inline = text.replace(/[\n\\n]/g,' ');
+  const matches = inline.match(/[A-D]\.[^A-D\n]+/g);
+  if(matches) return matches.map(m=>m.trim());
+  return [];
+}
+
+function pickOpt(gi,idx,el){
+  answers[gi]=idx;
+  el.closest('.opts').querySelectorAll('.opt').forEach((o,i)=>o.classList.toggle('sel',i===idx));
+}
+function saveTxt(gi){ const el=document.getElementById('ta'+gi); if(el) answers[gi]=el.value; }
+
+function saveCurrentText(){
+  const qs=secQuestions(curSec);
+  const q=qs[curQ];
+  if(q&&(q.type===OP||q.type===CA)){
+    const el=document.getElementById('ta'+q.gi);
+    if(el) answers[q.gi]=el.value;
+  }
+}
+
+function go(dir){
+  saveCurrentText();
+  const qs=secQuestions(curSec);
+  if(dir===1){
+    if(curQ<qs.length-1){ curQ++; renderQ(); }
+    else if(curSec<SECTIONS.length-1){ curSec++; curQ=0; showSecIntro(); }
+    else finish();
+  } else {
+    if(curQ>0){ curQ--; renderQ(); }
+    else if(curSec>0){ curSec--; curQ=secQuestions(curSec).length-1; renderQ(); show('screenQuiz'); }
+  }
+}
+
+// ── Finish ─────────────────────────────────────────────────────────────────
+function finish(){
+  const answered=Object.keys(answers).filter(k=>answers[k]!==undefined&&answers[k]!=='').length;
+  document.getElementById('doneAgent').textContent=agentName;
+  document.getElementById('answeredCount').textContent=answered;
+  buildSummary();
+  show('screenDone');
+  sendToSheets();
+}
+
+function getAnswerText(gi){
+  const q=QUESTIONS[gi];
+  const a=answers[gi];
+  if(a===undefined||a==='') return '—';
+  if(q.type===TF) return a===0?'True':'False';
+  if(q.type===MC){
+    const opts=parseOpts(q.q,MC);
+    return opts[a]||'—';
+  }
+  return a;
+}
+
+function buildSummary(){
+  const list=document.getElementById('summaryList');
+  const secs=SECTIONS.map((s,si)=>({...s,qs:secQuestions(si)}));
+  list.innerHTML=secs.map((s,si)=>`
+    <div style="margin-bottom:1.25rem;">
+      <div class="sec-badge ${s.badgeClass}" style="margin-bottom:.75rem;">Section ${si+1} · ${s.label}</div>
+      ${s.qs.map((q,qi)=>{
+        const a=getAnswerText(q.gi);
+        const empty=a==='—';
+        return `<div class="sum-card">
+          <div class="sum-top"><span class="sum-qnum">Q${qi+1}</span><span class="type-tag ${typeClass(q.type)}" style="font-size:10px;padding:1px 6px;">${q.type}</span></div>
+          <div class="sum-q">${q.q}</div>
+          <div class="sum-a${empty?' sum-empty':''}">${empty?'Not answered':escHtml(a)}</div>
+        </div>`;
+      }).join('')}
+    </div>`).join('');
+}
+
+function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
+
+async function sendToSheets(){
+  const el=document.getElementById('sendStatus');
+  el.innerHTML='<div class="banner banner-blue"><span class="spinner"></span>Sending answers...</div>';
+  const url=HARDCODED_URL;
+  if(!url){ el.innerHTML='<div class="banner banner-red">Script URL not configured. Please download your answers and send manually.</div>'; return; }
+  const payload={name:agentName,answers:{}};
+  QUESTIONS.forEach((q,gi)=>{ payload.answers[gi]=getAnswerText(gi); });
+  try{
+    await fetch(url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(payload)});
+    el.innerHTML='<div class="banner banner-green">&#10003; Answers submitted successfully.</div>';
+  } catch(e){
+    el.innerHTML='<div class="banner banner-red">Could not submit automatically. Please download your answers and send to Olga.</div>';
+  }
+}
+
+function myAnswersTxt(){
+  const lines=['Team Lior CRM Certification Test','Agent: '+agentName,'Date: '+new Date().toLocaleString('en-GB'),''];
+  SECTIONS.forEach((s,si)=>{
+    lines.push('═══ Section '+(si+1)+': '+s.label+' ═══','');
+    secQuestions(si).forEach((q,qi)=>{
+      lines.push('Q'+(qi+1)+' ['+q.type+']: '+q.q,'Answer: '+getAnswerText(q.gi),'');
+    });
+  });
+  return lines.join('\n');
+}
+
+function downloadMine(){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([myAnswersTxt()],{type:'text/plain;charset=utf-8'}));
+  a.download='cert_'+agentName.replace(/\s+/g,'_')+'.txt'; a.click();
+}
+function copyMine(){
+  navigator.clipboard.writeText(myAnswersTxt()).then(()=>{
+    const m=document.getElementById('copiedMsg'); m.classList.add('show');
+    setTimeout(()=>m.classList.remove('show'),2000);
+  });
+}
+
+// ── Init ───────────────────────────────────────────────────────────────────
+window.onload=function(){
+  show('screenWelcome');
+};
+</script>
+</body>
+</html>
